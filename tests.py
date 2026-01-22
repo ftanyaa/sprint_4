@@ -2,11 +2,6 @@ import pytest
 from main import BooksCollector
 
 
-@pytest.fixture
-def collector():
-    return BooksCollector()
-
-
 # ---------- add_new_book ----------
 
 def test_add_new_book_adds_book(collector):
@@ -46,6 +41,7 @@ def test_set_book_genre_invalid_genre_not_set(collector):
     assert collector.get_book_genre('1984') == ''
 
 
+
 # ---------- get_books_with_specific_genre / get_books_genre ----------
 
 def test_get_books_with_specific_genre_returns_correct_books(collector):
@@ -62,6 +58,13 @@ def test_get_books_with_specific_genre_returns_correct_books(collector):
 def test_get_books_genre_returns_books_dict(collector):
     collector.add_new_book('Книга')
     assert collector.get_books_genre() == {'Книга': ''}
+
+
+def test_get_book_genre_returns_genre_for_existing_book(collector):
+    collector.add_new_book('1984')
+    collector.set_book_genre('1984', 'Фантастика')
+    result = collector.get_book_genre('1984')
+    assert result == 'Фантастика'
 
 
 # ---------- get_books_for_children ----------
@@ -102,3 +105,12 @@ def test_delete_book_from_favorites_removes_book(collector):
     collector.delete_book_from_favorites('Шрек')
 
     assert 'Шрек' not in collector.get_list_of_favorites_books()
+
+
+def test_get_list_of_favorites_books_returns_favorites_list(collector):
+    collector.add_new_book('Шрек')
+    collector.add_book_in_favorites('Шрек')
+    result = collector.get_list_of_favorites_books()
+
+    assert result == ['Шрек']
+
